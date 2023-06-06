@@ -2,9 +2,9 @@ import sequelize from "../../config/dbconfig.js";
 import Sequelize from "sequelize";
 import Transcripts from "../transcripts/transcript.js";
 
-const Student = sequelize.define("student", {
+export const Student = sequelize.define("student", {
   svv_id: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     primaryKey: true,
   },
   roll_no: {
@@ -20,6 +20,10 @@ const Student = sequelize.define("student", {
     allowNull: false,
   },
   last_name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  password: {
     type: Sequelize.STRING,
     allowNull: false,
   },
