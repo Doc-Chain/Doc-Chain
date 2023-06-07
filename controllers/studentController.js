@@ -25,11 +25,18 @@ export const getStudent = async (req, res) => {
     // const studData = await Student.findAll({});
     const studData = await Student.findOne({
         where: {
-            svv_id: req.params.id
+            svv_id: req.params.svv_id
         }
     });
     res.status(200).json({ data: studData });
 }
+
+export const getAllStudents = async (req, res) => {
+    // const studData = await Student.findAll({});
+    const studData = await Student.findAll();
+    res.status(200).json({ data: studData });
+}
+
 export const loginStudent = async (req, res) => {
     // const studData = await Student.findAll({});
     const studData = await Student.findOne({

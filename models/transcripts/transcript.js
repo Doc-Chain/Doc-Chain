@@ -2,12 +2,21 @@ import sequelize from "../../config/dbconfig.js";
 import Sequelize from "sequelize";
 import Student from "../student/studentmodel.js";
 
-const Transcripts = sequelize.define("transcript", {
-  svv_id: {
-    type: Sequelize.INTEGER,
+export const Transcripts = sequelize.define("transcript", {
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
+  svv_id: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   link: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
   },
@@ -26,13 +35,6 @@ const Transcripts = sequelize.define("transcript", {
     ),
   },
 });
-
-Transcripts.belongsTo(Student, {
-  foreignKey: {
-    name: "svv_id",
-    allowNull: false
-  },
-});
  
 sequelize
   .sync()
@@ -42,4 +44,5 @@ sequelize
   .catch((error) => {
     console.error("Unable to create Transcript table : ", error);
   });
+  
 export default Transcripts;

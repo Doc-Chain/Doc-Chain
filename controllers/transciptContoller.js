@@ -1,6 +1,6 @@
-import { Transcripts as _transcripts } from '../models/index.js';
+import { Transcripts as transcripts } from '../models/transcripts/transcript.js';
 
-const Transcripts = _transcripts;
+const Transcripts = transcripts;
 export const addTranscript = async (req, res) => {
     const transcripts = await Transcripts.create({
         svv_id: 123456,
@@ -24,5 +24,13 @@ export const getTranscript = async (req, res) => {
     });
     res.status(200).json({ data: studTranscript })
 }
-
+export const getTranscriptBySVV = async (req, res) => {
+    // const studTranscript = await Transcripts.findAll({});
+    const studTranscript = await Transcripts.findAll({
+        where: {
+            svv_id: req.params.svv_id
+        }
+    });
+    res.status(200).json({ data: studTranscript })
+}
 export default { addTranscript, getTranscript };
