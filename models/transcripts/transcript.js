@@ -23,18 +23,12 @@ export const Transcripts = sequelize.define("transcript", {
   hash: {
     type: Sequelize.STRING,
     allowNull: true,
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.literal(
-      "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    ),
-  },
-});
+  } 
+},
+{
+  engine: 'InnoDB',
+  charset: 'utf8mb4',
+})
  
 sequelize
   .sync()

@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import upload_file from "./routes/uploadFile/upload-file.js";
 import studentDashboard from "./routes/uploadFile/studentDashboard.js";
 import adminDashboard from "./routes/uploadFile/adminDashboard.js";
+import verifyDashboard from "./routes/verify.js";
 import fileUpload from "express-fileupload";
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -33,6 +34,9 @@ app.use("public", express.static(__dirname + '/public'));
 app.use("/file/upload", upload_file);
 app.use("/my", studentDashboard )
 app.use("/admin", adminDashboard )
+app.use("/verify", verifyDashboard )
+app.use("/", studentDashboard )
+
 app.listen(PORT, () => {
   console.info("Server running on server " + PORT);
 });

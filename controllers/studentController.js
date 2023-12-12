@@ -28,7 +28,7 @@ export const getStudent = async (req, res) => {
             svv_id: req.params.svv_id
         }
     });
-    res.status(200).json({ data: studData });
+    return studData;
 }
 
 export const getAllStudents = async (req, res) => {

@@ -3,25 +3,29 @@ var router = express.Router();
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { getAllStudents, getStudent, loginStudent } from "../../controllers/studentController.js";
-import { getTranscriptBySVV } from "../../controllers/transciptContoller.js";
+import { addTranscript, getTranscriptBySVV } from "../../controllers/transciptContoller.js";
+import fs from 'fs';
+import cookieParser from 'cookie-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 console.log(__dirname);
 
+// router.use(cookieParser());
+
 router.get("/", function (req, res) {
+  // res.cookie('authorization-level', 'direct', { maxAge: 900000, httpOnly: false });
   res.sendFile("admin.html", { root: "./public" });
 });
 router.get("/add/:svv_id", function (req, res) {
-  res.sendFile("adddocument.html", { root: "./public" });
+  res.sendFile("addDocument.html", { root: "./public" });
 });
 
 router.get("/students/get", async function (req, res) {
     try {
         const studData = await getAllStudents(req, res);
-        console.log(studData)
-        res.status(200).json(studData);
+        res.status(200).end(JSON.stringify(studData));
       } catch (err) {
         console.error(err);
         res.json(err);
@@ -31,36 +35,32 @@ router.get("/students/get", async function (req, res) {
 router.get("/students/get/:svv_id", async function (req, res) {
   try {
       const studData = await getStudent(req, res);
-      console.log(studData)
-      res.status(200).json(studData);
+      console.log("/students/get/:svv_id" + studData)
+      res.status(200).json({ data: studData });
     } catch (err) {
       console.error(err);
       res.json(err);
     }
-});
+}); 
 router.get("/api/documents/:svv_id", async function (req, res) {
   try {
       const studData = await getTranscriptBySVV(req, res);
       
-      res.json(studData)
+      res.status(200).json({ data: studData })
     } catch (err) {
       console.error(err);
       res.json(err);
     }
 });
-router.post("/document/create", async function (req, res) {
+
+router.post("/student/transcript/create/:svv_id", async function (req, res) {
   try {
-    const studData = await loginStudent(req, res);
+      const transcript = await addTranscript(req, res);
 
-    const jsondata = JSON.parse(JSON.stringify(studData));
-    // console.log(jsondata)
-
-    res.cookie("svv_id", jsondata.svv_id, { maxAge: 900000 });
-    res.status(200).redirect("/my/home");
-  } catch (err) {
-    console.error(err);
-    res.json(err);
-  }
+      res.status(200).json(transcript.toJSON());
+    } catch (err) {
+      console.error(err);
+      res.json(err);
+    }
 });
-
 export default router;
