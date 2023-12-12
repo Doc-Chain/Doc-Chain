@@ -17,7 +17,7 @@ Before you begin, ensure you have the following installed:
 
     ```bash
     git clone https://github.com/Doc-Chain/Doc-Chain.git
-    cd your-blockchain-project
+    cd Doc-Chain
     ```
 
 2. **Install Dependencies:**
