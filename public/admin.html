@@ -1802,7 +1802,7 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
 
     $(document).ready(function(){
         $.ajax({
-            url: "students/get",
+            url: "/admin/students/get",
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html  dir="ltr" lang="en" xml:lang="en" class="no-js">
 <head>
-    <title>K J S C E: Log in to the site</title>
+    <title>K J S C E: Verify document</title>
     <link rel="shortcut icon" href="https://lms-kjsce.somaiya.edu/pluginfile.php/1/theme_essential/favicon/1669712810/Somaiya%20Logo.png"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="moodle, K J S C E: Log in to the site" />
@@ -99,50 +99,40 @@ document.body.className += ' jsenabled';
     <!-- Start Main Regions -->
     <div id="page-content" class="row-fluid">
         <section id="region-main" class="span12">
-            <span class="notifications" id="user-notifications"></span><div role="main"><span id="maincontent"></span><div class="loginbox clearfix twocolumns">
+            <span class="notifications" id="user-notifications"></span><div role="main"><span id="maincontent"></span><div class="loginbox clearfix twocolumns ">
 
-    <div class="loginpanel">
+    <div class="loginpanel" id="loginpanel" style="margin-left: 45vh;">
 
-        <h2>Log in</h2>
+        <h2>Verify Document</h2>
 
         <div class="subcontent loginsub">
                 <div class="loginerrors" role="alert">
-                    <a href="#" id="loginerrormessage" class="accesshide">Your session has timed out. Please log in again.</a>
-                    <span class="error"><i class="icon fa fa-exclamation text-warning fa-fw icon icon-pre"  title="Error" aria-label="Error"></i>Your session has timed out. Please log in again.</span>
+                    <a href="#" class="accesshide"></a>
+                    <span class="error" id="display-message"></span>
                 </div>
-            <form action="loginuser" method="post" id="login">
-                <div class="loginform">
-                    <div class="form-label">
-                        <label for="username">
-                                Username / email
-                        </label>
-                    </div>
-                    <div class="form-input">
-                        <input type="text" name="username" id="username" size="15" value="" autocomplete="username">
-                    </div>
-                    <div class="clearer"><!-- --></div>
-                    <div class="form-label">
-                        <label for="password">Password</label>
-                    </div>
-                    <div class="form-input">
-                        <input type="password" name="password" id="password" size="15" value="" autocomplete="current-password">
-                    </div>
-                </div>
+                <form onsubmit="return verifyDocument()" method="post" id="login">
+                    <div class="loginform">
+                      <div class="form-label">
+                        <label for="link">Enter the document Link</label>
+                      </div>
+                      <div class="form-input">
+                        <input type="text" name="link" id="link" size="15" value="" autocomplete="link">
+                      </div>
 
-                <div class="clearer"><!-- --></div>
-                    <div class="rememberpass">
-                        <input type="checkbox" name="rememberusername" id="rememberusername" value="1"  />
-                        <label for="rememberusername">Remember username</label>
+                      <div class="form-label password">
+                        <label for="password">Enter the password</label>
+                      </div>
+                      <div class="form-input password">
+                        <input type="text" name="password" id="password" size="15" value="" autocomplete="password">
+                      </div>
+
+                      <div class="clearer"><!-- --></div>
                     </div>
-                <div class="clearer"><!-- --></div>
-                <input id="anchor" type="hidden" name="anchor" value="" />
-                <script>document.getElementById('anchor').value = location.hash;</script>
-                <input type="hidden" name="logintoken" value="aVOG9nNyeh8INqJKsz5a12n8cfvBxdiI">
-                <input type="submit" id="loginbtn" value="Log in" />
-                <div class="forgetpass">
-                    <a href="https://lms-kjsce.somaiya.edu/login/forgot_password.php">Forgotten your username or password?</a>
-                </div>
-            </form>
+                  
+                    <div class="clearer"><!-- --></div>
+                    <div class="clearer"><!-- --></div>
+                    <input type="submit" id="verifybtn" value="Verify" />
+                  </form>
 
             <div class="desc">
                 Cookies must be enabled in your browser
@@ -156,24 +146,7 @@ document.body.className += ' jsenabled';
 
     </div>
 
-    <div class="signuppanel">
-        <h2>Is this your first time here?</h2>
-        <div class="subcontent">
-            <p>Welcome to KJSCE Learning Management System</p>
-        </div>
 
-        <div class="subcontent potentialidps">
-            <h6>Log in using your account on:</h6>
-            <div class="potentialidplist">
-                    <div class="potentialidp">
-                        <a href="https://lms-kjsce.somaiya.edu/auth/oauth2/login.php?id=2&amp;wantsurl=%2F&amp;sesskey=XnK6FqYTGA" title="Login with Somaiya Email" class="btn">
-                            <img src="https://accounts.google.com/favicon.ico" alt="" width="24" height="24"/>
-                        Login with Somaiya Email
-                        </a>
-                    </div>
-            </div>
-        </div>
-    </div>
 </div></div>        </section>
     </div>
     <!-- End Main Regions -->
@@ -307,13 +280,111 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
 //]]>
 </script>
 <script>
-    function delete_cookie(name) {
-        document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
-    delete_cookie('authorization-level')
-    delete_cookie('svv_id')
+    function checkCookie(cookieName) {
+        const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+        return cookies.some(cookie => cookie.startsWith(`${cookieName}=`));
+      }
+    
+    const password = document.getElementById("password").value;
 
-</script>
+    // Check if the cookie exists
+    const authorizationCookieExists = checkCookie('authorization-level');
+    // If the cookie exists, hide the password form elements
+    if (authorizationCookieExists) {
+      document.querySelectorAll('.password').forEach(element => {
+        element.style.display = 'none';
+      });
+    }
+
+    async function verifyDocument() {
+      event.preventDefault();
+    
+      // Get the form data
+      const link = document.getElementById("link").value;
+      const password = document.getElementById("password").value;
+    
+        // Make a POST request to the server
+
+        const response = await fetch("/verify/verifyDocument", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ link, password, authorizationCookieExists }),
+        });
+    
+        // Parse the JSON response
+        const result = await response.json();
+    
+        // Display the result or handle it accordingly
+        // Display the result or handle it accordingly
+        // Display the result or handle it accordingly
+        if (result.verified) {
+          // Student verified successfully, update the content
+          const verificationResultContainer = document.getElementById("loginpanel");
+          console.log(result);
+          verificationResultContainer.innerHTML = `
+            <p>Document verified successfully!</p>
+            <table style="border-collapse: collapse; width: 100%;">
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Field</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Value</th>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Doc Link</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.link}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">SVV ID</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].svv_id}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Roll Number</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].roll_no}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">First Name</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].first_name}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Middle Name</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].middle_name}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Last Name</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].last_name}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Year</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].year}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Branch</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].branch}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Course</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].course}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Phone</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].phone}</td>
+              </tr>
+              <tr style="border: 1px solid #ddd; padding: 8px; text-align: left;">
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">Email</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${result.studentDetails[0].email}</td>
+              </tr>
+            </table>
+          `;
+        } else {
+          // No transcript found, display the message
+          document.getElementById("display-message").textContent = result.message;
+        }
+        
+
+     
+    }
+    </script>
 </body>
 </html>
 <!-- Essential theme version: 2018121704 is developed by Gareth J Barnard: about.me/gjbarnard -->

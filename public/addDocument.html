@@ -1977,9 +1977,11 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
                 <li class="activity resource modtype_resource " id="module-50393"><div><div class="mod-indent-outer"><div class="mod-indent"></div><div><div class="activityinstance"><a class="" onclick="" href= "${data.file}"><img src="${data.file}" class="iconlarge activityicon" alt="" role="presentation" aria-hidden="true">
                     <span class="instancename">${data.name}<span class="accesshide "> File</span></span></a> <span class="resourcelinkdetails">Uploaded ${new Date().getDate() + '/' + (new Date().getMonth()+1) + '/' + new Date().getFullYear()}</span></div><span class="actions">
                         <form method="post" action="${data.file}" class="togglecompletion"><div><input type="hidden" name="id" value="50393"><input type="hidden" name="sesskey" value="QRBkxW5ClN"><input type="hidden" name="modulename" value="Module 5: Incident Response, Red Team &amp; Blue Team"><input type="hidden" name="completionstate" value="1"> </div></form></span></div></div></div>
-                        <button id="push_bck">Push to Blockchain</button>
+                        <center><button id="push_bck">Push to Blockchain</button></center>
                 </li>   
                 `)
+                $('#progress-wrp' + " .status").text("Document Uploaded");
+
                 $('#push_bck').on('click', function(){
 
                     var unique_key = crypto.randomUUID();
@@ -1994,10 +1996,12 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
                           
                             web3.eth.defaultAccount = String(account)
                         
-                            console.log(web3.eth.defaultAccount)
+                            //console.log(web3.eth.defaultAccount)
                             var myContract = new web3.eth.Contract(contractAbiJSON.abi, '0x8f4aC5E4a7f6AE442dE326d0f430Fa37ce41e9c3', {from: web3.eth.defaultAccount})
                           
-                          myContract.methods.get_file(unique_key, svv_id, file_hash, file_type).send({from: web3.eth.defaultAccount}, function(error, transactionHash){
+                          myContract.methods.store_file(unique_key, svv_id, file_hash, file_type).send({from: web3.eth.defaultAccount, gas: '1000000'}).then((data)=>{
+                            var transactionHash = data.transactionHash;
+
                             console.log(transactionHash)
                 
                             var data = {
@@ -2008,12 +2012,13 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
                             }
                 
                             $.ajax({
-                                url: "../../admin/student/transacript/create/"+svv_id,
+                                url: "../../admin/student/transcript/create/"+svv_id,
                                 type: 'POST',
-                                data: JSON.stringify(data),
+                                data: data,
                                 dataType: 'json', // added data type
                                 success: function(res) {
                                     console.log(res);
+                                    location.reload();
                                 }
                             });
                             
@@ -2046,7 +2051,7 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
         }
         // update progressbars classes so it fits your code
         $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
-        $(progress_bar_id + " .status").text("Uploading" + percent + "% ...");
+        $(progress_bar_id + " .status").text("Uploading 100%...");
     };
 
     //Change id to your id
@@ -2086,8 +2091,8 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
                         <th>Email</th>
                     </thead>
                     `);
-                console.log(res.data.data)
-                res.data = res.data.data
+                    
+                res.data = res.data
                     document_div.append(`
                         <tr style="cursor:pointer" id="${res.data.svv_id}" onclick="window.location.href='/admin/add/'+${res.data.svv_id}">
                             <td>${res.data.svv_id}</td>
@@ -2100,8 +2105,8 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
                             <td>${res.data.email}</td>
                         </tr>
                     `);
-                console.log(res);                
-            }
+
+                }
         });
         
         $.ajax({
@@ -2109,7 +2114,6 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
             type: 'GET',
             dataType: 'json', // added data type
             success: function(res) {
-                console.log(res);
 
                 document_div.parent().append(`<h4>Existing Documents</h4>`)
 
@@ -2162,7 +2166,7 @@ Y.use("moodle-core-popuphelp",function() {M.core.init_popuphelp();
 
                         <form>
                             <input type="file" id="ingredient_file" name="document">
-                            <input type="button" value="Submit" onclick="uploadFile()"
+                            <input type="button" value="Upload" onclick="uploadFile()"
                           </form>
                         <div id="progress-wrp" style="display:none">
                             <div class="progress-bar"></div>

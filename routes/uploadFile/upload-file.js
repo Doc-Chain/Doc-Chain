@@ -4,9 +4,9 @@ import { Web3Storage, getFilesFromPath } from "web3.storage";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { unlink } from "fs";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 
 router.post("/", async (req, res) => {
   // Code for user authentication will go here for future purposes
