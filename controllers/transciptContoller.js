@@ -3,16 +3,17 @@ import { Transcripts as transcripts } from '../models/transcripts/transcript.js'
 const Transcripts = transcripts;
 export const addTranscript = async (req, res) => {
     const transcripts = await Transcripts.create({
-        svv_id: 123456,
-        link: "https://google.com",
-        hash: "tytytytytyt",
-        filename: "bhavya.pdf"
+        svv_id: req.body.svv_id,
+        link: req.body.link,
+        hash: req.body.hash,
+        filename: req.body.filename
+        // svv_id: 123456,
+        // link: "https://google.com",
+        // hash: "tytytytytyt",
+        // filename: "bhavya.pdf"
     });
-    console.log(transcripts instanceof Transcripts);
-    console.log(transcripts.svv_id);
-    // await student.save();
-    console.log(transcripts.toJSON());
-    res.status(200).json(transcripts.toJSON());
+    
+    return transcripts;
 }
 
 export const getTranscript = async (req, res) => {

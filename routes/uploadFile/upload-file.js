@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
     console.log(uploadPath + " was deleted");
   });
 
-  res.json({ file: "https://" + cid + ".ipfs.w3s.link/" + document.name });
+  res.json({ file: "https://" + cid + ".ipfs.w3s.link/" + document.name, cid:cid, name:document.name });
 });
 
 export default router;
